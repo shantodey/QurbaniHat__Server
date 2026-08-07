@@ -11,8 +11,21 @@ datasource db {
 model Users{
   id Stirng @id @default{uuid()}
   name Stirng
-  email Stirng
+  userName Stirng
+  email Stirng 
   password Stirng
-  role Stirng
+  role UserRole @default(User)
+  avatar Stirng?
 
+
+
+  @@map("users__table)
+  @@unique({email,userName})
+  @@index({email,userName})
+}
+
+enam UserRole{
+  User
+  Admin
+  Manager
 }
