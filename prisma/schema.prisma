@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -8,24 +6,51 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-model Users{
-  id Stirng @id @default{uuid()}
-  name Stirng
-  userName Stirng
-  email Stirng 
-  password Stirng
-  role UserRole @default(User)
-  avatar Stirng?
 
+model User {
+  id       String   @id @default(uuid())
+  name     String
+  userName String
+  email    String
+  password String
+  role     UserRole @default(User)
+  avatar   String?
+  orders   Orders[]
 
-
-  @@map("users__table)
-  @@unique({email,userName})
-  @@index({email,userName})
+  @@map("users")
 }
 
-enam UserRole{
+enum UserRole {
   User
   Admin
   Manager
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  titel       String
+  type        String
+  breed       String
+  price       Int
+  weight      Int
+  age         Int
+  description String
+  image       String
+  category    String
+  orders      Orders[]   
+
+  @@map("products")
+}
+
+model Orders {
+  id        String  @id @default(uuid())
+  userid    String
+  user      User    @relation(fields: [userid], references: [id])
+  productid String
+  product   Product @relation(fields: [productid], references: [id])
+  titel       String 
+  type        String
+  breed       String
+  price       Int
+  weight      Int
 }

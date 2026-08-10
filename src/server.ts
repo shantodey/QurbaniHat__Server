@@ -9,5 +9,5 @@ dotenv.config();
 const PORT=process.env.PORT|| 5000
 
 app.listen(PORT,()=>{
-    console.log("wellcome to the server")
+    console.log("welcome to the server")
 });
