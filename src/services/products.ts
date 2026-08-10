@@ -24,4 +24,23 @@ router.post("/",async(req,res)=>{
     }
 })
 
+// for getting all the animal data forn the database
+router.get("/",async(req,res)=>{
+    try {
+        const data=await prisma.product.findMany();
+        res.json({
+            success:true,
+            message:"Data Created!",
+            data,
+        })
+        
+    } catch (err:any) {
+        res.status(400).json({
+            success:false,
+            message:err.massage || "Error fetching data",
+            data:null,
+        })
+    }
+})
+
 export default router
