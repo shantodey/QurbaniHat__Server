@@ -3,131 +3,122 @@ import prisma from "../lib/prisma";
 
 const router = Router();
 
-// api for creating new product into database
+// create review
 router.post("/", async (req, res) => {
     try {
-        const { title, type, breed, price, weight, age, description, image, category } = req.body;
-        const data = await prisma.product.create({
+        const { rating, comment, productId, userId } = req.body;
+        const data = await prisma.review.create({
             data: {
-                title,
-                type,
-                breed,
-                price: Number(price),
-                weight: Number(weight),
-                age: Number(age),
-                description,
-                image,
-                category,
+                rating: Number(rating),
+                comment,
+                productId,
+                userId,
             },
         });
         res.json({
             success: true,
-            message: "Product Created Successfully!",
+            message: "Review created successfully",
             data,
         });
     } catch (err: any) {
-        console.log(err);
         res.status(400).json({
             success: false,
-            message: err.message || "Failed to create product!",
+            message: err.message || "Failed to create review",
             data: null,
         });
     }
 });
 
-// for getting all the animal data from the database
+// get all reviews
 router.get("/", async (req, res) => {
     try {
-        const data = await prisma.product.findMany({
+        const data = await prisma.review.findMany({
             where: { isDeleted: false },
         });
         res.json({
             success: true,
-            message: "Data Found!",
+            message: "Reviews retrieved successfully",
             data,
         });
     } catch (err: any) {
         res.status(400).json({
             success: false,
-            message: err.message || "Error fetching data",
+            message: err.message || "Error fetching reviews",
             data: null,
         });
     }
 });
 
-// get single product by id
+// get review by id
 router.get("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await prisma.product.findFirst({
+        const data = await prisma.review.findFirst({
             where: { id, isDeleted: false },
         });
         if (!data) {
             res.status(404).json({
                 success: false,
-                message: "Product not found!",
+                message: "Review not found",
                 data: null,
             });
             return;
         }
         res.json({
             success: true,
-            message: "Product retrieved successfully",
+            message: "Review retrieved successfully",
             data,
         });
     } catch (err: any) {
         res.status(400).json({
             success: false,
-            message: err.message || "Error fetching product",
+            message: err.message || "Error fetching review",
             data: null,
         });
     }
 });
 
-// update product by id
+// update review
 router.patch("/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const payload = req.body;
-        if (payload.price) payload.price = Number(payload.price);
-        if (payload.weight) payload.weight = Number(payload.weight);
-        if (payload.age) payload.age = Number(payload.age);
-
-        const data = await prisma.product.update({
+        if (payload.rating) payload.rating = Number(payload.rating);
+        const data = await prisma.review.update({
             where: { id },
             data: payload,
         });
         res.json({
             success: true,
-            message: "Product updated successfully!",
+            message: "Review updated successfully",
             data,
         });
     } catch (err: any) {
         res.status(400).json({
             success: false,
-            message: err.message || "Error updating product",
+            message: err.message || "Error updating review",
             data: null,
         });
     }
 });
 
-// soft delete product by id
+// soft delete review
 router.delete("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const data = await prisma.product.update({
+        const data = await prisma.review.update({
             where: { id },
             data: { isDeleted: true },
         });
         res.json({
             success: true,
-            message: "Product deleted successfully!",
+            message: "Review deleted successfully",
             data,
         });
     } catch (err: any) {
         res.status(400).json({
             success: false,
-            message: err.message || "Error deleting product",
+            message: err.message || "Error deleting review",
             data: null,
         });
     }

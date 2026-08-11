@@ -19,6 +19,7 @@ model User {
 
   emailVerified Boolean   @default(false)
   image         String?
+  isDeleted     Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
@@ -33,6 +34,12 @@ enum UserRole {
   Manager
 }
 
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
 model Product {
   id          String   @id @default(uuid())
   title       String
@@ -44,6 +51,9 @@ model Product {
   description String
   image       String
   category    String
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   orders      Orders[]
 
   @@map("products")
@@ -58,14 +68,42 @@ model Orders {
   productid String
   product   Product @relation(fields: [productid], references: [id])
 
-  username    String   @default("")
+  username    String      @default("")
   userphone   Int
   ordertitel  String
   orderbreed  String
   orderprice  Int
   orderweight Int
+  status      OrderStatus @default(PENDING)
+  isDeleted   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@map("orders")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int      @default(5)
+  comment   String?
+  productId String?
+  userId    String?
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
 }
 
 model Session {
@@ -115,3 +153,4 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+

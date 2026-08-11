@@ -1,15 +1,16 @@
 import { Router } from "express";
 import products from "../services/products";
 import order from "../services/order";
+import user from "../services/user";
+import category from "../services/category";
+import review from "../services/review";
 
-
-
-const router= Router()
+const router = Router();
 
 router.use("/products", products);
-
-
-
 router.use("/order", order);
+router.use("/users", user);
+router.use("/categories", category);
+router.use("/reviews", review);
 
-export default router
+export default router;
