@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  name          String
-  userName      String    @unique
-  email         String    @unique
-  password      String?
-  role          UserRole  @default(User)
-  avatar        String?
-  orders        Orders[]
+  id       String   @id @default(uuid())
+  name     String
+  userName String   @unique
+  email    String   @unique
+  password String?
+  role     UserRole @default(User)
+  avatar   String?
+  orders   Orders[]
 
   emailVerified Boolean   @default(false)
   image         String?
@@ -35,7 +35,7 @@ enum UserRole {
 
 model Product {
   id          String   @id @default(uuid())
-  titel       String
+  title       String
   type        String
   breed       String
   price       Int
@@ -50,16 +50,22 @@ model Product {
 }
 
 model Orders {
-  id        String  @id @default(uuid())
-  userid    String
-  user      User    @relation(fields: [userid], references: [id])
+  id String @id @default(uuid())
+
+  userid String
+  user   User   @relation(fields: [userid], references: [id])
+  
   productid String
   product   Product @relation(fields: [productid], references: [id])
-  titel     String
-  type      String
-  breed     String
-  price     Int
-  weight    Int
+
+  username    String   @default("")
+  userphone   Int
+  ordertitel  String
+  orderbreed  String
+  orderprice  Int
+  orderweight Int
+
+  @@map("orders")
 }
 
 model Session {
