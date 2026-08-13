@@ -8,36 +8,22 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  userName String   @unique
-  email    String   @unique
-  password String?
-  role     UserRole @default(User)
-  avatar   String?
-  orders   Orders[]
-
+  id            String    @id @default(uuid())
+  name          String
+  userName      String    @unique
+  email         String    @unique
+  password      String?
+  role          UserRole  @default(User)
+  avatar        String?
+  createdAt     DateTime  @default(now())
   emailVerified Boolean   @default(false)
   image         String?
-  isDeleted     Boolean   @default(false)
-  createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  sessions      Session[]
   accounts      Account[]
+  orders        Orders[]
+  sessions      Session[]
 
   @@map("users")
-}
-
-enum UserRole {
-  User
-  Admin
-  Manager
-}
-
-enum OrderStatus {
-  PENDING
-  COMPLETED
-  CANCELLED
 }
 
 model Product {
@@ -51,65 +37,31 @@ model Product {
   description String
   image       String
   category    String
-  isDeleted   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
   orders      Orders[]
 
   @@map("products")
 }
 
 model Orders {
-  id String @id @default(uuid())
-
-  userid String
-  user   User   @relation(fields: [userid], references: [id])
-  
-  productid String
-  product   Product @relation(fields: [productid], references: [id])
-
-  username    String      @default("")
+  id          String  @id @default(uuid())
+  userid      String
+  productid   String
   userphone   Int
   ordertitel  String
   orderbreed  String
   orderprice  Int
   orderweight Int
-  status      OrderStatus @default(PENDING)
-  isDeleted   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  username    String  @default("")
+  product     Product @relation(fields: [productid], references: [id])
+  user        User    @relation(fields: [userid], references: [id])
 
   @@map("orders")
-}
-
-model Category {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  isDeleted   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("categories")
-}
-
-model Review {
-  id        String   @id @default(uuid())
-  rating    Int      @default(5)
-  comment   String?
-  productId String?
-  userId    String?
-  isDeleted Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("reviews")
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ipAddress String?
@@ -117,7 +69,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
@@ -127,7 +78,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -137,6 +87,7 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("account")
@@ -154,3 +105,8 @@ model Verification {
   @@map("verification")
 }
 
+enum UserRole {
+  User
+  Admin
+  Manager
+}
