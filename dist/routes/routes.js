@@ -1,9 +1,9 @@
 import { Router } from "express";
-import products from "../services/products";
-import order from "../services/order";
-import user from "../services/user";
-import category from "../services/category";
-import review from "../services/review";
+import products from "../services/products.js";
+import order from "../services/order.js";
+import user from "../services/user.js";
+import category from "../services/category.js";
+import review from "../services/review.js";
 const router = Router();
 router.use("/products", products);
 router.use("/order", order);

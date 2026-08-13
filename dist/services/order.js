@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prisma from "../lib/prisma";
+import prisma from "../lib/prisma.js";
 const router = Router();
 // api for creating new order in the database
 router.post("/", async (req, res) => {
