@@ -19,9 +19,11 @@ model User {
   emailVerified Boolean   @default(false)
   image         String?
   updatedAt     DateTime  @updatedAt
+  isDeleted     Boolean   @default(false)
   accounts      Account[]
   orders        Orders[]
   sessions      Session[]
+  reviews       Review[]
 
   @@map("users")
 }
@@ -37,13 +39,43 @@ model Product {
   description String
   image       String
   category    String
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   orders      Orders[]
+  reviews     Review[]
 
   @@map("products")
 }
 
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int
+  comment   String
+  productId String
+  userId    String
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("reviews")
+}
+
 model Orders {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   userid      String
   productid   String
   userphone   Int
@@ -51,9 +83,13 @@ model Orders {
   orderbreed  String
   orderprice  Int
   orderweight Int
-  username    String  @default("")
-  product     Product @relation(fields: [productid], references: [id])
-  user        User    @relation(fields: [userid], references: [id])
+  username    String   @default("")
+  status      String   @default("pending")
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  product     Product  @relation(fields: [productid], references: [id])
+  user        User     @relation(fields: [userid], references: [id])
 
   @@map("orders")
 }
